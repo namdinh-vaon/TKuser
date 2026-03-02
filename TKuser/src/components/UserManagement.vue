@@ -1,109 +1,40 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted } from "vue";
 import Dialog from "primevue/dialog";
 import CreateUser from "./CreateUser.vue";
 import api from "@/services/api";
 import type { ApiUser } from "@/types/user";
-import { useDeleteUser } from "../services/deleteUser";
-
-export interface User {
-  id: number;
-  name: {
-    firstname: string;
-    lastname: string;
-  };
-  email: string;
-  username: string;
-  password: string;
-  avatar: string;
-  date: string;
-  role: string;
-  status: "Active" | "Inactive" | "Suspended";
-}
+import { useDeleteUser } from "../services/api";
+import { useUserStore } from "@/Store/userStore";
 
 const showDialog = ref(false);
-const users = ref<User[]>([]);
+const closeDialog = () => {
+  showDialog.value = false;
+};
 const selectedUser = ref<ApiUser | null>(null);
 const { deleteUser } = useDeleteUser();
+const userStore = useUserStore();
 
-// Sửa user
-const updateUser = (updatedUser: any) => {
-  const index = users.value.findIndex((u) => u.id === updatedUser.id);
-
-  if (index !== -1) {
-    users.value[index] = updatedUser;
-  }
+const openCreate = () => {
+  selectedUser.value = null;
+  showDialog.value = true;
 };
 
-// Mở dialog update
+onMounted(() => {
+  userStore.loadUsers();
+});
+
+// Edit
 const openEdit = async (user: any) => {
   const res = await api.get(`/users/${user.id}`);
   selectedUser.value = res.data;
   showDialog.value = true;
 };
 
-// Add user
-const addUser = (user: any) => {
-  const maxId = users.value.length
-    ? Math.max(...users.value.map((u) => u.id))
-    : 0;
-  const newId = maxId + 1;
-
-  users.value.push({
-    id: newId,
-    name: user.name,
-    email: user.email,
-    username: user.username,
-    password: user.password,
-    avatar: "https://i.pravatar.cc/150?img=" + user.id,
-    date: new Date().toLocaleDateString(),
-    role: user.role || "User",
-    status: "Active",
-  });
-
-  currentPage.value = 1;
-};
-
-const loadUsers = async () => {
-  try {
-    const res = await api.get("/users");
-
-    users.value = res.data.map((u: any) => ({
-      id: u.id,
-      name: u.name,
-      email: u.email,
-      username: u.username,
-      password: u.password,
-      avatar: `https://i.pravatar.cc/150?img=${u.id}`,
-      date: new Date().toLocaleDateString(),
-      role: "User",
-      status: "Active",
-    }));
-  } catch (err) {
-    console.log(err);
-  }
-};
-onMounted(loadUsers);
-
 const statusColor = (status: string) => {
   if (status === "Active") return "bg-green-500";
   if (status === "Suspended") return "bg-red-500";
   return "bg-yellow-500";
-};
-
-const currentPage = ref(1);
-const pageSize = 5;
-
-const paginatedUsers = computed(() => {
-  const start = (currentPage.value - 1) * pageSize;
-  const end = start + pageSize;
-  return users.value.slice(start, end);
-});
-
-const totalPages = computed(() => Math.ceil(users.value.length / pageSize));
-
-const removeUser = (id: number) => {
-  users.value = users.value.filter((u) => u.id !== id);
 };
 </script>
 
@@ -121,12 +52,7 @@ const removeUser = (id: number) => {
 
           <button
             class="bg-white text-gray-700 px-4 py-2 rounded shadow"
-            @click="
-              () => {
-                selectedUser = null;
-                showDialog = true;
-              }
-            "
+            @click="openCreate"
           >
             + Add New User
           </button>
@@ -148,7 +74,7 @@ const removeUser = (id: number) => {
 
         <tbody>
           <tr
-            v-for="user in paginatedUsers"
+            v-for="user in userStore.paginatedUsers"
             :key="user.id"
             class="border-t hover:bg-gray-50"
           >
@@ -186,7 +112,9 @@ const removeUser = (id: number) => {
               </button>
               <button
                 class="text-red-500"
-                @click="deleteUser(user.id, () => removeUser(user.id))"
+                @click="
+                  deleteUser(user.id, () => userStore.deleteUser(user.id))
+                "
               >
                 ❌
               </button>
@@ -198,28 +126,28 @@ const removeUser = (id: number) => {
       <div class="flex justify-end gap-2 m-4">
         <!-- page -->
         <button
-          @click="currentPage--"
-          :disabled="currentPage === 1"
+          @click="userStore.currentPage--"
+          :disabled="userStore.currentPage === 1"
           class="px-3 py-1"
         >
           Previous
         </button>
 
         <button
-          v-for="page in totalPages"
+          v-for="page in userStore.totalPages"
           :key="page"
-          @click="currentPage = page"
+          @click="userStore.currentPage = page"
           :class="[
             'px-3 py-1 ',
-            currentPage === page ? 'bg-blue-500 text-white' : '',
+            userStore.currentPage === page ? 'bg-blue-500 text-white' : '',
           ]"
         >
           {{ page }}
         </button>
 
         <button
-          @click="currentPage++"
-          :disabled="currentPage === totalPages"
+          @click="userStore.currentPage++"
+          :disabled="userStore.currentPage === userStore.totalPages"
           class="px-3 py-1"
         >
           Next
@@ -230,17 +158,12 @@ const removeUser = (id: number) => {
     </div>
   </div>
   <Dialog
-    v-model:visible="showDialog"
+    :visible="showDialog"
+    @update:visible="showDialog = $event"
     modal
     :showHeader="false"
     class="w-[480px] !bg-transparent !shadow-none !border-none"
   >
-    <CreateUser
-      v-if="showDialog"
-      :userEdit="selectedUser"
-      @close="showDialog = false"
-      @created="addUser"
-      @updated="updateUser"
-    />
+    <CreateUser :userEdit="selectedUser" @close="closeDialog" />
   </Dialog>
 </template>

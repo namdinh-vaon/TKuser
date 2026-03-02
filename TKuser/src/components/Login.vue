@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import api from "@/services/api";
 import CreateUser from "./CreateUser.vue";
+import { useLoginStore } from "@/Store/loginStore";
 
 const router = useRouter();
 
@@ -12,6 +13,7 @@ const remember = ref(false);
 const showPassword = ref(false);
 const loading = ref(false);
 const showDialog = ref(false);
+const loginStore = useLoginStore();
 
 const login = async () => {
   if (!email.value || !password.value) {
@@ -21,18 +23,10 @@ const login = async () => {
 
   try {
     loading.value = true;
-
-    const res = await api.post("/auth/login", {
-      username: email.value,
-      password: password.value,
-    });
-
-    // lưu token
-    localStorage.setItem("token", res.data.token);
+    await loginStore.login(email.value, password.value);
 
     alert("Đăng nhập thành công!");
 
-    // chuyển sang trang user list
     router.push("/users");
   } catch (err) {
     alert("Sai tài khoản hoặc mật khẩu");

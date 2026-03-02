@@ -1,19 +1,21 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import api from "@/services/api";
-import { computed } from "vue";
+import { ref, watch, computed } from "vue";
 import type { ApiUser } from "@/types/user";
-import { useDeleteUser } from "../services/deleteUser";
+import { useDeleteUser } from "@/services/api";
+import { useUserStore } from "@/Store/userStore";
+
+const { deleteUser } = useDeleteUser();
+const userStore = useUserStore();
 
 const props = defineProps<{
   userEdit?: ApiUser | null;
 }>();
 
+const emit = defineEmits(["close", "updated", "deleted"]);
+
 const title = computed(() =>
   props.userEdit ? "Update User" : "Create New User",
 );
-
-const emit = defineEmits(["close", "created", "updated", "deleted"]);
 
 const firstName = ref("");
 const lastName = ref("");
@@ -25,7 +27,6 @@ const confirmPassword = ref("");
 const showPassword = ref(false);
 const showConfirmPassword = ref(false);
 const loading = ref(false);
-const { deleteUser } = useDeleteUser();
 
 watch(
   () => props.userEdit,
@@ -42,42 +43,6 @@ watch(
   { immediate: true },
 );
 
-// Create user
-const createUser = async () => {
-  const res = await api.post("/users", {
-    email: email.value,
-    username: email.value,
-    password: password.value,
-    name: {
-      firstname: firstName.value,
-      lastname: lastName.value,
-    },
-    role: role.value,
-  });
-
-  emit("created", res.data);
-};
-
-// Update user
-const updateUser = async () => {
-  if (!props.userEdit) return;
-
-  const res = await api.put(`/users/${props.userEdit.id}`, {
-    id: props.userEdit.id,
-    email: email.value,
-    username: email.value,
-    password: password.value,
-    name: {
-      firstname: firstName.value,
-      lastname: lastName.value,
-    },
-    role: role.value,
-  });
-
-  emit("updated", res.data);
-};
-
-// So khớp password
 const handleSubmit = async () => {
   if (password.value !== confirmPassword.value) {
     alert("Password không khớp!");
@@ -87,29 +52,40 @@ const handleSubmit = async () => {
   try {
     loading.value = true;
 
+    const payload = {
+      email: email.value,
+      username: email.value,
+      password: password.value,
+      name: {
+        firstname: firstName.value,
+        lastname: lastName.value,
+      },
+      role: role.value,
+    };
+
     if (props.userEdit) {
-      await updateUser();
+      await userStore.updateUser(props.userEdit.id, payload);
     } else {
-      await createUser();
+      await userStore.createUser(payload);
     }
 
     emit("close");
-  } catch (err) {
-    console.log(err);
   } finally {
     loading.value = false;
   }
 };
 
-// Delete user
 const handleDelete = () => {
   if (!props.userEdit) return;
 
   deleteUser(props.userEdit.id, () => {
-    emit("deleted");
+    userStore.deleteUser(props.userEdit!.id);
+    emit("deleted", props.userEdit!.id);
+    emit("close");
   });
 };
 </script>
+
 <template>
   <div class="bg-white rounded-lg shadow-lg overflow-hidden">
     <!-- HEADER -->

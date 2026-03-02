@@ -1,0 +1,113 @@
+import { defineStore } from "pinia";
+import api from "@/services/api";
+import { getUsers, updateUser, createUserAPI } from "@/services/api";
+
+export interface User {
+  id: number;
+  name: {
+    firstname: string;
+    lastname: string;
+  };
+  email: string;
+  username: string;
+  password: string;
+  avatar: string;
+  date: string;
+  role: string;
+  status: "Active" | "Inactive" | "Suspended";
+}
+
+export const useUserStore = defineStore("user", {
+  state: () => ({
+    users: [] as User[],
+    currentPage: 1,
+    pageSize: 5,
+  }),
+
+  getters: {
+    paginatedUsers(state) {
+      const start = (state.currentPage - 1) * state.pageSize;
+      return state.users.slice(start, start + state.pageSize);
+    },
+
+    totalPages(state) {
+      return Math.ceil(state.users.length / state.pageSize);
+    },
+  },
+
+  actions: {
+    /* ================= LOAD ================= */
+    async loadUsers() {
+      const res = await getUsers();
+
+      this.users = res.data.map((u: any) => ({
+        id: u.id,
+        name: u.name,
+        email: u.email,
+        username: u.username,
+        password: u.password,
+        avatar: `https://i.pravatar.cc/150?img=${u.id}`,
+        date: new Date().toLocaleDateString(),
+        role: "User",
+        status: "Active",
+      }));
+    },
+
+    /* ================= CREATE ================= */
+    async createUser(payload: any) {
+      const res = await createUserAPI(payload);
+
+      const newId =
+        this.users.length > 0
+          ? Math.max(...this.users.map((u) => u.id)) + 1
+          : 1;
+
+      const newUser: User = {
+        id: newId,
+
+        name: payload.name,
+        email: payload.email,
+        username: payload.username,
+        password: payload.password,
+
+        avatar: `https://i.pravatar.cc/150?img=${newId}`,
+        date: new Date().toLocaleDateString(),
+        role: payload.role || "User",
+        status: "Active",
+      };
+
+      this.users.push(newUser);
+
+      return newUser;
+    },
+
+    /* ================= UPDATE ================= */
+    async updateUser(id: number, payload: any) {
+      const res = await updateUser(id, payload);
+
+      const index = this.users.findIndex((u) => u.id === id);
+
+      if (index !== -1) {
+        this.users[index] = {
+          ...this.users[index],
+          ...payload,
+        };
+      }
+
+      return res.data;
+    },
+
+    /* ================= DELETE ================= */
+    async deleteUser(id: number) {
+      await api.delete(`/users/${id}`);
+
+      // xoá local (quan trọng)
+      this.users = this.users.filter((u) => u.id !== id);
+    },
+
+    /* ================= PAGINATION ================= */
+    setPage(page: number) {
+      this.currentPage = page;
+    },
+  },
+});
