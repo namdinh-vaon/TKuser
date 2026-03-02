@@ -99,9 +99,7 @@ export const useUserStore = defineStore("user", {
 
     /* ================= DELETE ================= */
     async deleteUser(id: number) {
-      await api.delete(`/users/${id}`);
-
-      // xoá local (quan trọng)
+      // xoá local
       this.users = this.users.filter((u) => u.id !== id);
     },
 

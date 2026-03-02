@@ -17,6 +17,7 @@ export const getUsers = () => {
   return api.get("/users");
 };
 
+// POST new user
 export const createUserAPI = (payload: any) => {
   return api.post("/users", payload);
 };
@@ -26,6 +27,7 @@ export const updateUser = (id: number, data: any) => {
   return api.put(`/users/${id}`, data);
 };
 
+// DELETE user
 export function useDeleteUser() {
   const confirm = useConfirm();
 
