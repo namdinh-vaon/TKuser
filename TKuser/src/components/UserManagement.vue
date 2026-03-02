@@ -42,10 +42,15 @@ const openEdit = async (user: any) => {
   showDialog.value = true;
 };
 
-// Điền data
+// Add user
 const addUser = (user: any) => {
+  const maxId = users.value.length
+    ? Math.max(...users.value.map((u) => u.id))
+    : 0;
+  const newId = maxId + 1;
+
   users.value.push({
-    id: user.id,
+    id: newId,
     name: user.name,
     email: user.email,
     username: user.username,

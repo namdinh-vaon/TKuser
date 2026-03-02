@@ -53,7 +53,17 @@ const createUser = async () => {
     role: role.value,
   });
 
-  emit("created", res.data);
+  emit("created", {
+    id: res.data.id,
+    email: email.value,
+    username: email.value,
+    password: password.value,
+    name: {
+      firstname: firstName.value,
+      lastname: lastName.value,
+    },
+    role: role.value,
+  });
 };
 
 // Update user
