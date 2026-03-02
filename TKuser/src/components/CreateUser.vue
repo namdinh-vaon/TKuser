@@ -35,6 +35,8 @@ watch(
     firstName.value = user.name?.firstname || "";
     lastName.value = user.name?.lastname || "";
     email.value = user.email || "";
+    password.value = user.password || "";
+    confirmPassword.value = user.password || "";
     role.value = user.role || "";
   },
   { immediate: true },
@@ -53,17 +55,7 @@ const createUser = async () => {
     role: role.value,
   });
 
-  emit("created", {
-    id: res.data.id,
-    email: email.value,
-    username: email.value,
-    password: password.value,
-    name: {
-      firstname: firstName.value,
-      lastname: lastName.value,
-    },
-    role: role.value,
-  });
+  emit("created", res.data);
 };
 
 // Update user
