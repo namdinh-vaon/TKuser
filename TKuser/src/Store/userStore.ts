@@ -55,7 +55,7 @@ export const useUserStore = defineStore("user", {
 
     /* ================= CREATE ================= */
     async createUser(payload: any) {
-      const res = await createUserAPI(payload);
+      await createUserAPI(payload);
 
       const newId =
         this.users.length > 0

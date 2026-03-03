@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import api from "@/services/api";
+import { loginUser } from "@/services/api";
 
 export const useLoginStore = defineStore("login", {
   state: () => ({
@@ -9,10 +9,7 @@ export const useLoginStore = defineStore("login", {
 
   actions: {
     async login(username: string, password: string) {
-      const res = await api.post("/auth/login", {
-        username,
-        password,
-      });
+      const res = await loginUser(username, password);
 
       this.token = res.data.token;
       this.isLoggedIn = true;

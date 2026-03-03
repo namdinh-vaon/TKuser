@@ -7,6 +7,14 @@ const api = axios.create({
 
 export default api;
 
+// Login user
+export const loginUser = (username: string, password: string) => {
+  return api.post("/auth/login", {
+    username,
+    password,
+  });
+};
+
 // GET user theo id
 export const getUser = (id: number) => {
   return api.get(`/users/${id}`);
@@ -22,7 +30,7 @@ export const createUserAPI = (payload: any) => {
   return api.post("/users", payload);
 };
 
-// UPDATE user (PUT)
+// UPDATE user
 export const updateUser = (id: number, data: any) => {
   return api.put(`/users/${id}`, data);
 };
