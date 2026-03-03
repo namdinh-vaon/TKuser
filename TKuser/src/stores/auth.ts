@@ -1,3 +1,4 @@
+// Store xác thực
 import { defineStore } from "pinia";
 import { loginUser } from "@/services/api";
 

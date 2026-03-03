@@ -1,17 +1,17 @@
 <script setup lang="ts">
+// Component User Management - Hiển thị trang quản lý người dùng
 import { ref, onMounted } from "vue";
 import Dialog from "primevue/dialog";
 import CreateUser from "./CreateUser.vue";
 import api from "@/services/api";
-import type { ApiUser } from "@/types/user";
+import { useUserStore, type User } from "@/stores/user";
 import { useDeleteUser } from "../services/api";
-import { useUserStore } from "@/Store/userStore";
 
 const showDialog = ref(false);
 const closeDialog = () => {
   showDialog.value = false;
 };
-const selectedUser = ref<ApiUser | null>(null);
+const selectedUser = ref<User | null>(null);
 const { deleteUser } = useDeleteUser();
 const userStore = useUserStore();
 
@@ -78,7 +78,7 @@ const statusColor = (status: string) => {
             :key="user.id"
             class="border-t hover:bg-gray-50"
           >
-            <td class="p-4">{{ user.id }}</td>
+            <td class="p-4 text-black">{{ user.id }}</td>
 
             <!-- Name + avatar -->
             <td class="flex items-center gap-3 py-3">
@@ -86,17 +86,17 @@ const statusColor = (status: string) => {
                 :src="user.avatar"
                 class="w-10 h-10 rounded-full object-cover"
               />
-              <span class="font-medium"
+              <span class="font-medium text-black"
                 >{{ user.name.firstname }} {{ user.name.lastname }}</span
               >
             </td>
 
-            <td>{{ user.date }}</td>
-            <td>{{ user.role }}</td>
+            <td class="text-black">{{ user.date }}</td>
+            <td class="text-black">{{ user.role }}</td>
 
             <!-- Status -->
             <td>
-              <div class="flex items-center gap-2">
+              <div class="flex items-center text-black gap-2">
                 <span
                   class="w-3 h-3 rounded-full"
                   :class="statusColor(user.status)"
@@ -123,35 +123,50 @@ const statusColor = (status: string) => {
         </tbody>
       </table>
 
-      <div class="flex justify-end gap-2 m-4">
+      <div class="flex justify-between m-4">
+        <!-- show data -->
+        <div class="flex items-center gap-1 text-sm text-gray-700">
+          Showing
+          <span class="font-bold text-gray-900">{{
+            userStore.showingData.currentMax
+          }}</span>
+          out of
+          <span class="font-bold text-gray-900">{{
+            userStore.showingData.total
+          }}</span>
+          entries
+        </div>
+
         <!-- page -->
-        <button
-          @click="userStore.currentPage--"
-          :disabled="userStore.currentPage === 1"
-          class="px-3 py-1"
-        >
-          Previous
-        </button>
+        <div class="flex items-center gap-4">
+          <button
+            @click="userStore.currentPage--"
+            :disabled="userStore.currentPage === 1"
+            class="px-3 py-1 text-black"
+          >
+            Previous
+          </button>
 
-        <button
-          v-for="page in userStore.totalPages"
-          :key="page"
-          @click="userStore.currentPage = page"
-          :class="[
-            'px-3 py-1 ',
-            userStore.currentPage === page ? 'bg-blue-500 text-white' : '',
-          ]"
-        >
-          {{ page }}
-        </button>
+          <button
+            v-for="page in userStore.totalPages"
+            :key="page"
+            @click="userStore.currentPage = page"
+            :class="[
+              'px-3 py-1 text-black ',
+              userStore.currentPage === page ? 'bg-blue-500 text-white' : '',
+            ]"
+          >
+            {{ page }}
+          </button>
 
-        <button
-          @click="userStore.currentPage++"
-          :disabled="userStore.currentPage === userStore.totalPages"
-          class="px-3 py-1"
-        >
-          Next
-        </button>
+          <button
+            @click="userStore.currentPage++"
+            :disabled="userStore.currentPage === userStore.totalPages"
+            class="px-3 py-1 text-black"
+          >
+            Next
+          </button>
+        </div>
       </div>
 
       <!-- Footer -->

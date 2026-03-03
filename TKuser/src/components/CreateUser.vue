@@ -1,14 +1,14 @@
 <script setup lang="ts">
+// Component Create or Update - Hiển thị dialog tạo mới hoặc cập nhật người dùng
 import { ref, watch, computed } from "vue";
-import type { ApiUser } from "@/types/user";
 import { useDeleteUser } from "@/services/api";
-import { useUserStore } from "@/Store/userStore";
+import { useUserStore, type User } from "@/stores/user";
 
 const { deleteUser } = useDeleteUser();
 const userStore = useUserStore();
 
 const props = defineProps<{
-  userEdit?: ApiUser | null;
+  userEdit?: User | null;
 }>();
 
 const emit = defineEmits(["close", "updated", "deleted"]);
@@ -105,41 +105,34 @@ const handleDelete = () => {
       <!-- NAME -->
       <div class="grid grid-cols-2 gap-4">
         <div>
-          <label class="font-medium">First Name</label>
+          <label class="font-medium text-black">First Name</label>
           <input
             v-model="firstName"
-            class="w-full border rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            class="input-standard"
             placeholder="John"
           />
         </div>
 
         <div>
-          <label class="font-medium">Last Name</label>
-          <input
-            v-model="lastName"
-            class="w-full border rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            placeholder="Doe"
-          />
+          <label class="font-medium text-black">Last Name</label>
+          <input v-model="lastName" class="input-standard" placeholder="Doe" />
         </div>
       </div>
 
       <!-- EMAIL -->
       <div>
-        <label class="font-medium">Email</label>
+        <label class="font-medium text-black">Email</label>
         <input
           v-model="email"
-          class="w-full border rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          class="input-standard"
           placeholder="john.doe@example.com"
         />
       </div>
 
       <!-- ROLE -->
       <div>
-        <label class="font-medium">Role</label>
-        <select
-          v-model="role"
-          class="w-full border rounded px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-400"
-        >
+        <label class="font-medium text-black">Role</label>
+        <select v-model="role" class="input-standard">
           <option value="">Select Role</option>
           <option>Admin</option>
           <option>Publisher</option>
@@ -152,13 +145,13 @@ const handleDelete = () => {
       <div class="grid grid-cols-2 gap-4">
         <!-- Password -->
         <div>
-          <label class="font-medium">Password</label>
+          <label class="font-medium text-black">Password</label>
           <div class="relative">
             <input
               :type="showPassword ? 'text' : 'password'"
               v-model="password"
               placeholder="••••••••••"
-              class="w-full border rounded-lg px-3 py-2 pr-10 focus:ring-2 focus:ring-blue-400"
+              class="input-standard"
             />
             <button
               type="button"
@@ -172,13 +165,13 @@ const handleDelete = () => {
 
         <!-- Confirm Password -->
         <div>
-          <label class="font-medium">Confirm Password</label>
+          <label class="font- text-black">Confirm Password</label>
           <div class="relative">
             <input
               :type="showConfirmPassword ? 'text' : 'password'"
               v-model="confirmPassword"
               placeholder="••••••••••"
-              class="w-full border rounded-lg px-3 py-2 pr-10 focus:ring-2 focus:ring-blue-400"
+              class="input-standard"
             />
             <button
               type="button"

@@ -1,5 +1,5 @@
+// Store người dùng - Quản lý tạo, sửa, xóa và hiện danh sách người dùng
 import { defineStore } from "pinia";
-import api from "@/services/api";
 import { getUsers, updateUser, createUserAPI } from "@/services/api";
 
 export interface User {
@@ -20,6 +20,7 @@ export interface User {
 export const useUserStore = defineStore("user", {
   state: () => ({
     users: [] as User[],
+    totalItems: 0,
     currentPage: 1,
     pageSize: 5,
   }),
@@ -32,6 +33,21 @@ export const useUserStore = defineStore("user", {
 
     totalPages(state) {
       return Math.ceil(state.users.length / state.pageSize);
+    },
+
+    showingData(): { currentMax: number; total: number } {
+      if (this.totalItems === 0) {
+        return { currentMax: 0, total: 0 };
+      }
+
+      // Công thức tính số tích lũy đến trang hiện tại
+      const potentialCount = this.currentPage * this.pageSize;
+      const currentMax = Math.min(potentialCount, this.totalItems);
+
+      return {
+        currentMax,
+        total: this.totalItems,
+      };
     },
   },
 
@@ -51,6 +67,14 @@ export const useUserStore = defineStore("user", {
         role: "User",
         status: "Active",
       }));
+
+      this.totalItems = this.users.length;
+    },
+
+    /* ================= SHOW USER (ENTRIES) ================= */
+    setUsersData(data: any[], total: number) {
+      this.users = data;
+      this.totalItems = total;
     },
 
     /* ================= CREATE ================= */
@@ -77,6 +101,7 @@ export const useUserStore = defineStore("user", {
       };
 
       this.users.push(newUser);
+      this.totalItems = this.users.length;
 
       return newUser;
     },
@@ -101,6 +126,11 @@ export const useUserStore = defineStore("user", {
     async deleteUser(id: number) {
       // xoá local
       this.users = this.users.filter((u) => u.id !== id);
+      this.totalItems = this.users.length;
+
+      if (this.paginatedUsers.length === 0 && this.currentPage > 1) {
+        this.currentPage--;
+      }
     },
 
     /* ================= PAGINATION ================= */

@@ -9,8 +9,9 @@ import Dialog from "primevue/dialog";
 import ConfirmationService from "primevue/confirmationservice";
 
 const app = createApp(App);
+const pinia = createPinia();
+app.use(pinia);
 app.use(router);
-app.use(createPinia());
 app.use(PrimeVue, {
   theme: {
     preset: Aura,

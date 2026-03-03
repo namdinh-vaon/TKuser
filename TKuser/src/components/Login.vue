@@ -1,9 +1,9 @@
 <script setup lang="ts">
+// Component Login - Hiển thị trang đăng nhập
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import api from "@/services/api";
 import CreateUser from "./CreateUser.vue";
-import { useLoginStore } from "@/Store/loginStore";
+import { useLoginStore } from "@/stores/auth";
 
 const router = useRouter();
 
@@ -28,8 +28,10 @@ const login = async () => {
     alert("Đăng nhập thành công!");
 
     router.push("/users");
-  } catch (err) {
-    alert("Sai tài khoản hoặc mật khẩu");
+  } catch (err: any) {
+    const errorMsg =
+      err.response?.data?.message || "Sai tài khoản hoặc mật khẩu";
+    alert(errorMsg);
   } finally {
     loading.value = false;
   }
@@ -54,24 +56,24 @@ const login = async () => {
 
         <!-- Email -->
         <div>
-          <label class="block font-medium mb-1">Email</label>
+          <label class="block text-black font-medium mb-1">Email</label>
           <input
             v-model="email"
             type="email"
             placeholder="user@example.com"
-            class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            class="input-standard"
           />
         </div>
 
         <!-- Password -->
         <div>
-          <label class="block font-medium mb-1">Password</label>
+          <label class="block text-black font-medium mb-1">Password</label>
           <div class="relative">
             <input
               :type="showPassword ? 'text' : 'password'"
               v-model="password"
               placeholder="••••••••••"
-              class="w-full border rounded-lg px-3 py-2 pr-10 focus:ring-2 focus:ring-blue-400"
+              class="input-standard"
             />
             <button
               type="button"
@@ -85,7 +87,7 @@ const login = async () => {
 
         <!-- Remember -->
         <div class="flex justify-between text-sm">
-          <label class="flex items-center gap-2">
+          <label class="flex items-center text-black gap-2 cursor-pointer">
             <input type="checkbox" v-model="remember" />
             Remember me
           </label>
