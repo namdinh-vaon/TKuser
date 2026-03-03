@@ -4,8 +4,10 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import CreateUser from "./CreateUser.vue";
 import { useLoginStore } from "@/stores/auth";
+import { useToast } from "primevue/usetoast";
 
 const router = useRouter();
+const toast = useToast();
 
 const email = ref("");
 const password = ref("");
@@ -16,22 +18,24 @@ const showDialog = ref(false);
 const loginStore = useLoginStore();
 
 const login = async () => {
-  if (!email.value || !password.value) {
-    alert("Vui lòng nhập đầy đủ thông tin");
-    return;
-  }
-
   try {
     loading.value = true;
     await loginStore.login(email.value, password.value);
 
-    alert("Đăng nhập thành công!");
-
+    toast.add({
+      severity: "success",
+      summary: "Thành công",
+      detail: "Đăng nhập hệ thống hoàn tất!",
+      life: 3000,
+    });
     router.push("/users");
-  } catch (err: any) {
-    const errorMsg =
-      err.response?.data?.message || "Sai tài khoản hoặc mật khẩu";
-    alert(errorMsg);
+  } catch (error) {
+    toast.add({
+      severity: "error",
+      summary: "Lỗi đăng nhập",
+      detail: "Email hoặc mật khẩu không chính xác",
+      life: 5000,
+    });
   } finally {
     loading.value = false;
   }
