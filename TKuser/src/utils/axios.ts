@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getAuthToken, removeAuthToken, removeUser } from "@/utils/helpers";
+import { getAuthToken, removeAuthToken, removeUser } from "@/utils/helper";
 
 const instance = axios.create({
   baseURL: "http://localhost:3000",

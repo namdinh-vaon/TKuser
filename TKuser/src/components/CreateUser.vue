@@ -44,9 +44,11 @@ watch(
 );
 
 const handleSubmit = async () => {
-  if (password.value !== confirmPassword.value) {
-    alert("Password không khớp!");
-    return;
+  if (!props.userEdit) {
+    if (password.value !== confirmPassword.value) {
+      alert("Password không khớp!");
+      return;
+    }
   }
 
   try {
@@ -142,7 +144,7 @@ const handleDelete = () => {
       </div>
 
       <!-- PASSWORD -->
-      <div class="grid grid-cols-2 gap-4">
+      <div :class="[props.userEdit ? 'block' : 'grid grid-cols-2 gap-4']">
         <!-- Password -->
         <div>
           <label class="font-medium text-black">Password</label>
@@ -164,7 +166,7 @@ const handleDelete = () => {
         </div>
 
         <!-- Confirm Password -->
-        <div>
+        <div v-if="!props.userEdit">
           <label class="font- text-black">Confirm Password</label>
           <div class="relative">
             <input
