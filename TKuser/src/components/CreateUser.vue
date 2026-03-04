@@ -89,7 +89,7 @@ const handleDelete = () => {
 </script>
 
 <template>
-  <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+  <div class="bg-white rounded-lg shadow-lg overflow-hidden dark:bg-gray-400">
     <!-- HEADER -->
     <div
       class="bg-blue-500 text-white p-4 flex items-center justify-center gap-3"
@@ -207,7 +207,7 @@ const handleDelete = () => {
         <button
           v-if="props.userEdit"
           @click="handleDelete"
-          class="bg-red-500 text-white py-2 rounded hover:bg-red-600 transition w-full"
+          class="bg-red-400 text-white py-2 rounded hover:bg-red-500 transition w-full"
         >
           Delete User
         </button>

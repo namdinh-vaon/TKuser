@@ -2,7 +2,7 @@
 // Component Login - Hiển thị trang đăng nhập
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import CreateUser from "./CreateUser.vue";
+import CreateUser from "./UserManagement.vue";
 import { useLoginStore } from "@/stores/auth";
 import { useToast } from "primevue/usetoast";
 
@@ -26,8 +26,9 @@ const login = async () => {
       severity: "success",
       summary: "Thành công",
       detail: "Đăng nhập hệ thống hoàn tất!",
-      life: 3000,
+      life: 5000,
     });
+
     router.push("/users");
   } catch (error) {
     toast.add({
@@ -43,14 +44,18 @@ const login = async () => {
 </script>
 
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-100">
-    <div class="w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden">
+  <div
+    class="min-h-screen flex items-center justify-center bg-gray-100 dark:text-gray-800 dark:bg-gray-800"
+  >
+    <div
+      class="w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden dark:bg-gray-400"
+    >
       <!-- Header -->
       <div class="bg-blue-500 text-white text-center py-6">
         <h1
           class="text-2xl font-semibold flex items-center justify-center gap-2"
         >
-          <img src="./icons/padlock.png" class="w-6 h-6" /> Login
+          <img src="../components/icons/padlock.png" class="w-6 h-6" /> Login
         </h1>
       </div>
 
@@ -60,7 +65,7 @@ const login = async () => {
 
         <!-- Email -->
         <div>
-          <label class="block text-black font-medium mb-1">Email</label>
+          <label class="block font-medium mb-1">Email</label>
           <input
             v-model="email"
             type="email"
@@ -71,7 +76,7 @@ const login = async () => {
 
         <!-- Password -->
         <div>
-          <label class="block text-black font-medium mb-1">Password</label>
+          <label class="block font-medium mb-1">Password</label>
           <div class="relative">
             <input
               :type="showPassword ? 'text' : 'password'"
@@ -84,14 +89,14 @@ const login = async () => {
               class="absolute right-3 top-2"
               @click="showPassword = !showPassword"
             >
-              <img src="./icons/eye.png" class="w-6 h-6" />
+              <img src="../components/icons/eye.png" class="w-6 h-6" />
             </button>
           </div>
         </div>
 
         <!-- Remember -->
         <div class="flex justify-between text-sm">
-          <label class="flex items-center text-black gap-2 cursor-pointer">
+          <label class="flex items-center gap-2 cursor-pointer">
             <input type="checkbox" v-model="remember" />
             Remember me
           </label>

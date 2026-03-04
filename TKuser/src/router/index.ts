@@ -1,7 +1,7 @@
 // Cấu hình Router
 import { createRouter, createWebHistory } from "vue-router";
-import Login from "@/components/Login.vue";
-import UserManagement from "@/components/UserManagement.vue";
+import Login from "@/views/Login.vue";
+import UserManagement from "@/views/UserManagement.vue";
 import { useLoginStore } from "@/stores/auth";
 
 const routes = [

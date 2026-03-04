@@ -1,4 +1,3 @@
-// Cấu hình API
 import axios from "axios";
 import { useConfirm } from "primevue/useconfirm";
 
@@ -17,7 +16,7 @@ export const loginUser = (username: string, password: string) => {
 };
 
 // GET user theo id
-export const getUser = (id: number) => {
+export const getUserAPI = (id: number) => {
   return api.get(`/users/${id}`);
 };
 

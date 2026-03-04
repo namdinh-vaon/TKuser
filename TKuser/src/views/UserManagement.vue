@@ -2,10 +2,9 @@
 // Component User Management - Hiển thị trang quản lý người dùng
 import { ref, onMounted } from "vue";
 import Dialog from "primevue/dialog";
-import CreateUser from "./CreateUser.vue";
-import api from "@/services/api";
+import CreateUser from "../components/CreateUser.vue";
 import { useUserStore, type User } from "@/stores/user";
-import { useDeleteUser } from "../services/api";
+import { useDeleteUser, getUserAPI } from "../services/api";
 
 const showDialog = ref(false);
 const closeDialog = () => {
@@ -25,8 +24,8 @@ onMounted(() => {
 });
 
 // Edit
-const openEdit = async (user: any) => {
-  const res = await api.get(`/users/${user.id}`);
+const openEdit = async (user: User) => {
+  const res = await getUserAPI(user.id);
   selectedUser.value = res.data;
   showDialog.value = true;
 };
@@ -39,19 +38,21 @@ const statusColor = (status: string) => {
 </script>
 
 <template>
-  <div class="p-6 bg-gray-100 min-h-screen">
-    <div class="bg-white rounded-xl shadow overflow-hidden">
+  <div class="p-6 bg-gray-100 min-h-screen dark:text-gray-800 dark:bg-gray-800">
+    <div class="bg-white rounded-xl shadow overflow-hidden dark:bg-gray-400">
       <!-- Header -->
       <div class="bg-blue-500 text-white px-6 py-4 flex justify-between">
         <h2 class="text-xl font-semibold">User Management</h2>
 
         <div class="flex gap-3">
-          <button class="bg-white text-gray-700 px-4 py-2 rounded shadow">
+          <button
+            class="bg-white text-gray-700 px-4 py-2 rounded shadow dark:text-gray-900 dark:bg-gray-400"
+          >
             Export to Excel
           </button>
 
           <button
-            class="bg-white text-gray-700 px-4 py-2 rounded shadow"
+            class="bg-white text-gray-700 px-4 py-2 rounded shadow dark:text-gray-900 dark:bg-gray-400"
             @click="openCreate"
           >
             + Add New User
@@ -61,7 +62,7 @@ const statusColor = (status: string) => {
 
       <!-- Table -->
       <table class="w-full text-left">
-        <thead class="bg-gray-100 text-gray-600">
+        <thead class="bg-gray-100 text-gray-600 dark:bg-gray-400">
           <tr>
             <th class="p-4">#</th>
             <th>Name</th>
@@ -76,9 +77,9 @@ const statusColor = (status: string) => {
           <tr
             v-for="user in userStore.paginatedUsers"
             :key="user.id"
-            class="border-t hover:bg-gray-50"
+            class="border-t hover:bg-gray-50 dark:hover:bg-gray-300"
           >
-            <td class="p-4 text-black">{{ user.id }}</td>
+            <td class="p-4">{{ user.id }}</td>
 
             <!-- Name + avatar -->
             <td class="flex items-center gap-3 py-3">
@@ -86,17 +87,17 @@ const statusColor = (status: string) => {
                 :src="user.avatar"
                 class="w-10 h-10 rounded-full object-cover"
               />
-              <span class="font-medium text-black"
+              <span class="font-medium"
                 >{{ user.name.firstname }} {{ user.name.lastname }}</span
               >
             </td>
 
-            <td class="text-black">{{ user.date }}</td>
-            <td class="text-black">{{ user.role }}</td>
+            <td>{{ user.date }}</td>
+            <td>{{ user.role }}</td>
 
             <!-- Status -->
             <td>
-              <div class="flex items-center text-black gap-2">
+              <div class="flex items-center gap-2">
                 <span
                   class="w-3 h-3 rounded-full"
                   :class="statusColor(user.status)"
@@ -138,11 +139,11 @@ const statusColor = (status: string) => {
         </div>
 
         <!-- page -->
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-4 dark:text-gray-800">
           <button
             @click="userStore.currentPage--"
             :disabled="userStore.currentPage === 1"
-            class="px-3 py-1 text-black"
+            class="px-3 py-1"
           >
             Previous
           </button>
@@ -152,7 +153,7 @@ const statusColor = (status: string) => {
             :key="page"
             @click="userStore.currentPage = page"
             :class="[
-              'px-3 py-1 text-black ',
+              'px-3 py-1',
               userStore.currentPage === page ? 'bg-blue-500 text-white' : '',
             ]"
           >
@@ -162,7 +163,7 @@ const statusColor = (status: string) => {
           <button
             @click="userStore.currentPage++"
             :disabled="userStore.currentPage === userStore.totalPages"
-            class="px-3 py-1 text-black"
+            class="px-3 py-1"
           >
             Next
           </button>
