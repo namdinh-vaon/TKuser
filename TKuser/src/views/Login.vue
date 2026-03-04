@@ -2,12 +2,13 @@
 // Component Login - Hiển thị trang đăng nhập
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import CreateUser from "./UserManagement.vue";
+import CreateUser from "../components/CreateUser.vue";
 import { useLoginStore } from "@/stores/auth";
 import { useToast } from "primevue/usetoast";
 
 const router = useRouter();
 const toast = useToast();
+const loginStore = useLoginStore();
 
 const email = ref("");
 const password = ref("");
@@ -15,7 +16,6 @@ const remember = ref(false);
 const showPassword = ref(false);
 const loading = ref(false);
 const showDialog = ref(false);
-const loginStore = useLoginStore();
 
 const login = async () => {
   try {
@@ -26,7 +26,7 @@ const login = async () => {
       severity: "success",
       summary: "Thành công",
       detail: "Đăng nhập hệ thống hoàn tất!",
-      life: 5000,
+      life: 4000,
     });
 
     router.push("/users");
@@ -48,7 +48,7 @@ const login = async () => {
     class="min-h-screen flex items-center justify-center bg-gray-100 dark:text-gray-800 dark:bg-gray-800"
   >
     <div
-      class="w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden dark:bg-gray-400"
+      class="appearance-none w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden dark:bg-gray-300"
     >
       <!-- Header -->
       <div class="bg-blue-500 text-white text-center py-6">
@@ -97,7 +97,11 @@ const login = async () => {
         <!-- Remember -->
         <div class="flex justify-between text-sm">
           <label class="flex items-center gap-2 cursor-pointer">
-            <input type="checkbox" v-model="remember" />
+            <input
+              type="checkbox"
+              v-model="remember"
+              class="w-4 h-4 accent-blue-500"
+            />
             Remember me
           </label>
 

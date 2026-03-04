@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import forms from "@tailwindcss/forms";
 
 export default {
   darkMode: "media",
@@ -6,5 +7,9 @@ export default {
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    forms({
+      strategy: "class",
+    }),
+  ],
 } satisfies Config;
