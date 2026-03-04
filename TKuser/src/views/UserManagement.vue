@@ -1,7 +1,6 @@
 <script setup lang="ts">
 // Component User Management - Hiển thị trang quản lý người dùng
 import { ref, onMounted } from "vue";
-import Dialog from "primevue/dialog";
 import CreateUser from "../components/CreateUser.vue";
 import { useUserStore } from "@/stores/userStore";
 import { type User } from "../types/user";
@@ -63,7 +62,7 @@ const statusColor = (status: string) => {
 
       <!-- Table -->
       <table class="w-full text-left">
-        <thead class="bg-gray-100 text-gray-600 dark:bg-gray-400">
+        <thead class="bg-gray-100 text-gray-700 dark:bg-gray-500">
           <tr>
             <th class="p-4">#</th>
             <th>Name</th>
