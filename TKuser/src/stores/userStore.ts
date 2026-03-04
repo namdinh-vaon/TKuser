@@ -1,21 +1,7 @@
 // Store người dùng - Quản lý tạo, sửa, xóa và hiện danh sách người dùng
 import { defineStore } from "pinia";
 import { getUsers, updateUser, createUserAPI } from "@/services/api";
-
-export interface User {
-  id: number;
-  name: {
-    firstname: string;
-    lastname: string;
-  };
-  email: string;
-  username: string;
-  password: string;
-  avatar: string;
-  date: string;
-  role: string;
-  status: "Active" | "Inactive" | "Suspended";
-}
+import { type User } from "../types/user";
 
 export const useUserStore = defineStore("user", {
   state: () => ({

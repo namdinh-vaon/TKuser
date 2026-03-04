@@ -2,7 +2,8 @@
 // Component Create or Update - Hiển thị dialog tạo mới hoặc cập nhật người dùng
 import { ref, watch, computed } from "vue";
 import { useDeleteUser } from "@/services/api";
-import { useUserStore, type User } from "@/stores/user";
+import { useUserStore } from "@/stores/userStore";
+import { type User } from "../types/user";
 
 const { deleteUser } = useDeleteUser();
 const userStore = useUserStore();

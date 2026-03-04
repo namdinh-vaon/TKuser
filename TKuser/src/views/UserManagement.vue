@@ -3,7 +3,8 @@
 import { ref, onMounted } from "vue";
 import Dialog from "primevue/dialog";
 import CreateUser from "../components/CreateUser.vue";
-import { useUserStore, type User } from "@/stores/user";
+import { useUserStore } from "@/stores/userStore";
+import { type User } from "../types/user";
 import { useDeleteUser, getUserAPI } from "../services/api";
 
 const showDialog = ref(false);
