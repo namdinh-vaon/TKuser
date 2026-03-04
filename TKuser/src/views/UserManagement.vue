@@ -46,13 +46,13 @@ const statusColor = (status: string) => {
 
         <div class="flex gap-3">
           <button
-            class="bg-white text-gray-700 px-4 py-2 rounded shadow dark:text-gray-900 dark:bg-gray-400"
+            class="bg-white text-gray-700 px-4 py-2 rounded shadow transition hover:bg-gray-300 dark:text-gray-900 dark:bg-gray-400 dark:hover:bg-gray-300"
           >
             Export to Excel
           </button>
 
           <button
-            class="bg-white text-gray-700 px-4 py-2 rounded shadow dark:text-gray-900 dark:bg-gray-400"
+            class="bg-white text-gray-700 px-4 py-2 rounded shadow transition hover:bg-gray-300 dark:text-gray-900 dark:bg-gray-400 dark:hover:bg-gray-300"
             @click="openCreate"
           >
             + Add New User

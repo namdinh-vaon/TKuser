@@ -213,7 +213,7 @@ const handleDelete = () => {
         </button>
 
         <button
-          class="border border-blue-500 text-blue-500 py-2 rounded hover:bg-blue-50 transition w-full"
+          class="border border-blue-500 text-blue-500 py-2 rounded hover:bg-blue-50 dark:hover:bg-gray-300 transition w-full"
           @click="emit('close')"
         >
           Cancel
