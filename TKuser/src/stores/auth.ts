@@ -1,11 +1,12 @@
 // Store xác thực
 import { defineStore } from "pinia";
 import { loginUser } from "@/services/api";
+import { getAuthToken, removeAuthToken, setAuthToken } from "@/utils/helper";
 
 export const useLoginStore = defineStore("login", {
   state: () => ({
-    token: localStorage.getItem("token") || "",
-    isLoggedIn: !!localStorage.getItem("token"),
+    token: getAuthToken() || "",
+    isLoggedIn: !!getAuthToken(),
   }),
 
   actions: {
@@ -14,13 +15,13 @@ export const useLoginStore = defineStore("login", {
 
       this.token = res.data.token;
       this.isLoggedIn = true;
-      localStorage.setItem("token", this.token);
+      setAuthToken(this.token);
     },
 
     logout() {
       this.token = "";
       this.isLoggedIn = false;
-      localStorage.removeItem("token");
+      removeAuthToken();
     },
   },
 });

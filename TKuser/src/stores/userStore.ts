@@ -57,12 +57,6 @@ export const useUserStore = defineStore("user", {
       this.totalItems = this.users.length;
     },
 
-    /* ================= SHOW USER (ENTRIES) ================= */
-    setUsersData(data: any[], total: number) {
-      this.users = data;
-      this.totalItems = total;
-    },
-
     /* ================= CREATE ================= */
     async createUser(payload: any) {
       await createUserAPI(payload);
@@ -110,7 +104,6 @@ export const useUserStore = defineStore("user", {
 
     /* ================= DELETE ================= */
     async deleteUser(id: number) {
-      // xoá local
       this.users = this.users.filter((u) => u.id !== id);
       this.totalItems = this.users.length;
 

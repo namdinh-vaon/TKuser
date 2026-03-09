@@ -5,7 +5,12 @@ import UserManagement from "@/views/UserManagement.vue";
 import { useLoginStore } from "@/stores/auth";
 
 const routes = [
-  { path: "/", name: "Login", component: Login },
+  {
+    path: "/",
+    name: "Login",
+    component: Login,
+    meta: { requiresGuest: true },
+  },
   {
     path: "/users",
     name: "UserManagement",
@@ -20,17 +25,14 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const loginStore = useLoginStore();
+  const useLogin = useLoginStore();
 
-  if (to.meta.requiresAuth && !loginStore.isLoggedIn) {
-    // Chưa đăng nhập → chuyển về login, lưu lại đường dẫn để redirect sau
+  if (to.meta.requiresAuth && !useLogin.isLoggedIn) {
     next({ name: "Login", query: { redirect: to.fullPath } });
-  } else if (to.meta.requiresGuest && loginStore.isLoggedIn) {
-    // Đã đăng nhập → không cho vào trang login/register
+  } else if (to.meta.requiresGuest && useLogin.isLoggedIn) {
     next({ name: "UserManagement" });
   } else {
     next();
   }
 });
-
 export default router;

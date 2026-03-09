@@ -2,12 +2,13 @@ import "./assets/main.css";
 import "./App.vue";
 import { createApp } from "vue";
 import App from "./App.vue";
-import router from "./router";
+import router from "./router/index";
 import { createPinia } from "pinia";
 import PrimeVue from "primevue/config";
 import Aura from "@primevue/themes/aura";
 import Dialog from "primevue/dialog";
 import ConfirmationService from "primevue/confirmationservice";
+import "primeicons/primeicons.css";
 import ToastService from "primevue/toastservice";
 
 const app = createApp(App);

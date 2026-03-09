@@ -1,15 +1,8 @@
-import axios from "axios";
-import { useConfirm } from "primevue/useconfirm";
-
-const api = axios.create({
-  baseURL: "https://fakestoreapi.com",
-});
-
-export default api;
+import instance from "@/utils/axios";
 
 // Login user
 export const loginUser = (username: string, password: string) => {
-  return api.post("/auth/login", {
+  return instance.post("/auth/login", {
     username,
     password,
   });
@@ -17,39 +10,25 @@ export const loginUser = (username: string, password: string) => {
 
 // GET user theo id
 export const getUserAPI = (id: number) => {
-  return api.get(`/users/${id}`);
+  return instance.get(`/users/${id}`);
 };
 
 // GET user danh sach
 export const getUsers = () => {
-  return api.get("/users");
+  return instance.get("/users");
 };
 
 // POST new user
 export const createUserAPI = (payload: any) => {
-  return api.post("/users", payload);
+  return instance.post("/users", payload);
 };
 
 // UPDATE user
 export const updateUser = (id: number, data: any) => {
-  return api.put(`/users/${id}`, data);
+  return instance.put(`/users/${id}`, data);
 };
 
 // DELETE user
-export function useDeleteUser() {
-  const confirm = useConfirm();
-
-  const deleteUser = (id: number, callback?: () => void) => {
-    confirm.require({
-      message: "Bạn chắc chắn muốn xoá user?",
-      header: "Confirm Delete",
-
-      accept: async () => {
-        await api.delete(`/users/${id}`);
-        callback?.();
-      },
-    });
-  };
-
-  return { deleteUser };
-}
+export const deleteUserAPI = (id: number) => {
+  return instance.delete(`/users/${id}`);
+};

@@ -1,22 +1,14 @@
 <script setup lang="ts">
 // Component Create or Update - Hiển thị dialog tạo mới hoặc cập nhật người dùng
-import { ref, watch, computed } from "vue";
-import { useDeleteUser } from "@/services/api";
+import { ref, watch } from "vue";
+import { deleteUser } from "@/utils/helper";
 import { useUserStore } from "@/stores/userStore";
 import { type User } from "../types/user";
+import { useAppToast } from "@/utils/helper";
 
-const { deleteUser } = useDeleteUser();
+const delete_User = deleteUser();
 const userStore = useUserStore();
-
-const props = defineProps<{
-  userEdit?: User | null;
-}>();
-
-const emit = defineEmits(["close", "updated", "deleted"]);
-
-const title = computed(() =>
-  props.userEdit ? "Update User" : "Create New User",
-);
+const { showSuccess, showError } = useAppToast();
 
 const firstName = ref("");
 const lastName = ref("");
@@ -29,17 +21,22 @@ const showPassword = ref(false);
 const showConfirmPassword = ref(false);
 const loading = ref(false);
 
+const emit = defineEmits(["close"]);
+
+const props = defineProps<{
+  userEdit?: User | null;
+}>();
+
 watch(
   () => props.userEdit,
   (user) => {
     if (!user) return;
 
-    firstName.value = user.name?.firstname || "";
-    lastName.value = user.name?.lastname || "";
-    email.value = user.email || "";
-    password.value = user.password || "";
-    confirmPassword.value = user.password || "";
-    role.value = user.role || "";
+    firstName.value = user.name.firstname;
+    lastName.value = user.name.lastname;
+    email.value = user.email;
+    password.value = user.password;
+    role.value = user.role;
   },
   { immediate: true },
 );
@@ -47,7 +44,7 @@ watch(
 const handleSubmit = async () => {
   if (!props.userEdit) {
     if (password.value !== confirmPassword.value) {
-      alert("Password không khớp!");
+      showError("Mật khẩu không trùng khớp!");
       return;
     }
   }
@@ -66,13 +63,18 @@ const handleSubmit = async () => {
       role: role.value,
     };
 
-    if (props.userEdit) {
-      await userStore.updateUser(props.userEdit.id, payload);
-    } else {
+    if (!props.userEdit) {
       await userStore.createUser(payload);
+      showSuccess("Tạo thành công!");
+    } else {
+      await userStore.updateUser(props.userEdit.id, payload);
+      showSuccess("Cập nhật thành công!");
     }
 
     emit("close");
+  } catch (error) {
+    showError(props.userEdit ? "Không thể cập nhật!" : "Không thể tạo!");
+    console.error(props.userEdit ? "Lỗi khi cập nhật!" : "Lỗi khi tạo!", error);
   } finally {
     loading.value = false;
   }
@@ -81,9 +83,8 @@ const handleSubmit = async () => {
 const handleDelete = () => {
   if (!props.userEdit) return;
 
-  deleteUser(props.userEdit.id, () => {
+  delete_User(props.userEdit.id, () => {
     userStore.deleteUser(props.userEdit!.id);
-    emit("deleted", props.userEdit!.id);
     emit("close");
   });
 };
@@ -100,7 +101,9 @@ const handleDelete = () => {
       >
         +
       </div>
-      <h2 class="text-xl font-semibold">{{ title }}</h2>
+      <h2 class="text-xl font-semibold">
+        {{ props.userEdit ? "Update User" : "Create New User" }}
+      </h2>
     </div>
 
     <!-- FORM -->
@@ -161,7 +164,7 @@ const handleDelete = () => {
               class="absolute right-3 top-2"
               @click="showPassword = !showPassword"
             >
-              <img src="./icons/eye.png" class="w-6 h-6" />
+              <img src="../assets/icons/eye.png" class="w-6 h-6" />
             </button>
           </div>
         </div>
@@ -181,7 +184,7 @@ const handleDelete = () => {
               class="absolute right-3 top-2"
               @click="showConfirmPassword = !showConfirmPassword"
             >
-              <img src="./icons/eye.png" class="w-6 h-6" />
+              <img src="../assets/icons/eye.png" class="w-6 h-6" />
             </button>
           </div>
         </div>

@@ -55,7 +55,7 @@ const login = async () => {
         <h1
           class="text-2xl font-semibold flex items-center justify-center gap-2"
         >
-          <img src="../components/icons/padlock.png" class="w-6 h-6" /> Login
+          <img src="../assets/icons/padlock.png" class="w-6 h-6" /> Login
         </h1>
       </div>
 
@@ -89,7 +89,7 @@ const login = async () => {
               class="absolute right-3 top-2"
               @click="showPassword = !showPassword"
             >
-              <img src="../components/icons/eye.png" class="w-6 h-6" />
+              <img src="../assets/icons/eye.png" class="w-6 h-6" />
             </button>
           </div>
         </div>

@@ -4,15 +4,18 @@ import { ref, onMounted } from "vue";
 import CreateUser from "../components/CreateUser.vue";
 import { useUserStore } from "@/stores/userStore";
 import { type User } from "../types/user";
-import { useDeleteUser, getUserAPI } from "../services/api";
+import { getUserAPI } from "../services/api";
+import { useLoginStore } from "@/stores/auth";
+import { useRouter } from "vue-router";
+import { deleteUser } from "@/utils/helper";
 
 const showDialog = ref(false);
-const closeDialog = () => {
-  showDialog.value = false;
-};
+
 const selectedUser = ref<User | null>(null);
-const { deleteUser } = useDeleteUser();
+const delete_User = deleteUser();
 const userStore = useUserStore();
+const router = useRouter();
+const authStore = useLoginStore();
 
 const openCreate = () => {
   selectedUser.value = null;
@@ -35,6 +38,11 @@ const statusColor = (status: string) => {
   if (status === "Suspended") return "bg-red-500";
   return "bg-yellow-500";
 };
+
+const handleLogout = () => {
+  authStore.logout();
+  router.push("/");
+};
 </script>
 
 <template>
@@ -56,6 +64,16 @@ const statusColor = (status: string) => {
             @click="openCreate"
           >
             + Add New User
+          </button>
+
+          <button
+            class="bg-red-500 text-white px-4 py-2 rounded shadow transition hover:bg-red-700 flex items-center gap-2"
+            @click="handleLogout"
+          >
+            <span
+              ><img src="../assets/icons/logout.png" class="w-4 h-4"
+            /></span>
+            Logout
           </button>
         </div>
       </div>
@@ -114,7 +132,7 @@ const statusColor = (status: string) => {
               <button
                 class="text-red-500"
                 @click="
-                  deleteUser(user.id, () => userStore.deleteUser(user.id))
+                  delete_User(user.id, () => userStore.deleteUser(user.id))
                 "
               >
                 ❌
@@ -175,11 +193,10 @@ const statusColor = (status: string) => {
   </div>
   <Dialog
     :visible="showDialog"
-    @update:visible="showDialog = $event"
     modal
     :showHeader="false"
     class="w-[480px] !bg-transparent !shadow-none !border-none"
   >
-    <CreateUser :userEdit="selectedUser" @close="closeDialog" />
+    <CreateUser :userEdit="selectedUser" @close="showDialog = false" />
   </Dialog>
 </template>

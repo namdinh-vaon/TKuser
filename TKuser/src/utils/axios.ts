@@ -1,8 +1,10 @@
+// Cấu hình Axios - HTTP client với interceptor tự động gắn token và xử lý lỗi 401
 import axios from "axios";
 import { getAuthToken, removeAuthToken, removeUser } from "@/utils/helper";
+import { API_BASE_URL } from "./constants";
 
 const instance = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: API_BASE_URL,
 });
 
 //Tự động gắn Bearer token vào mỗi request
@@ -23,7 +25,7 @@ instance.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       removeAuthToken();
       removeUser();
-      window.location.href = "/login";
+      window.location.href = "/";
     }
     return Promise.reject(error);
   },
