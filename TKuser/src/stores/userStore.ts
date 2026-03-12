@@ -111,10 +111,5 @@ export const useUserStore = defineStore("user", {
         this.currentPage--;
       }
     },
-
-    /* ================= PAGINATION ================= */
-    setPage(page: number) {
-      this.currentPage = page;
-    },
   },
 });

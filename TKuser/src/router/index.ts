@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Login from "@/views/Login.vue";
 import UserManagement from "@/views/UserManagement.vue";
 import { useLoginStore } from "@/stores/auth";
+import Store from "@/views/Store.vue";
 
 const routes = [
   {
@@ -16,6 +17,11 @@ const routes = [
     name: "UserManagement",
     component: UserManagement,
     meta: { requiresAuth: true },
+  },
+  {
+    path: "/store",
+    name: "Store",
+    component: Store,
   },
 ];
 

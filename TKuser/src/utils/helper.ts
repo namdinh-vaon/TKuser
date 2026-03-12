@@ -36,7 +36,7 @@ export const useAppToast = () => {
   return { showSuccess, showError };
 };
 
-// ======== Delete User ===
+// ======== Delete User ========
 export function deleteUser() {
   const confirm = useConfirm();
   const { showSuccess, showError } = useAppToast();
@@ -72,3 +72,27 @@ export function deleteUser() {
   };
   return delete_User;
 }
+
+//
+const responsiveOptions = [
+  {
+    breakpoint: "1300px",
+    numVisible: 5, // Màn hình lớn hiện 5
+    numScroll: 1,
+  },
+  {
+    breakpoint: "1024px",
+    numVisible: 3, // Màn hình vừa hiện 3
+    numScroll: 1,
+  },
+  {
+    breakpoint: "768px",
+    numVisible: 2, // Máy tính bảng hiện 2
+    numScroll: 1,
+  },
+  {
+    breakpoint: "560px",
+    numVisible: 1, // Điện thoại hiện 1
+    numScroll: 1,
+  },
+];

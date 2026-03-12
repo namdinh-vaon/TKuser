@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // Component User Management - Hiển thị trang quản lý người dùng
 import { ref, onMounted } from "vue";
-import CreateUser from "../components/CreateUser.vue";
+import CreateUser from "../components/useCreateUser.vue";
 import { useUserStore } from "@/stores/userStore";
 import { type User } from "../types/user";
 import { getUserAPI } from "../services/api";

@@ -27,6 +27,7 @@ const props = defineProps<{
   userEdit?: User | null;
 }>();
 
+// Chuyền dữ liệu khi update
 watch(
   () => props.userEdit,
   (user) => {
@@ -41,6 +42,7 @@ watch(
   { immediate: true },
 );
 
+// Nút Tạo/Cập nhật user
 const handleSubmit = async () => {
   if (!props.userEdit) {
     if (password.value !== confirmPassword.value) {
@@ -80,6 +82,7 @@ const handleSubmit = async () => {
   }
 };
 
+// Nút xóa
 const handleDelete = () => {
   if (!props.userEdit) return;
 

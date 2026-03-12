@@ -2,7 +2,7 @@
 // Component Login - Hiển thị trang đăng nhập
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import CreateUser from "../components/CreateUser.vue";
+import CreateUser from "../components/useCreateUser.vue";
 import { useLoginStore } from "@/stores/auth";
 import { useToast } from "primevue/usetoast";
 
