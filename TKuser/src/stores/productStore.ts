@@ -1,86 +1,110 @@
 import { defineStore } from "pinia";
-import { getProducts, creatNewProducts, updateProduct } from "@/services/api";
+import {
+  getProducts,
+  creatNewProducts,
+  updateProduct,
+} from "@/services/apiProduct";
 import { type Product } from "@/types/product";
 
 export const useProductStore = defineStore("product", {
   state: () => ({
     products: [] as Product[],
-    electronics: [] as Product[],
-    jewelery: [] as Product[],
-    menClothing: [] as Product[],
-    womenClothing: [] as Product[],
-    loading: false,
+
+    totalItems: 0,
+    currentPage: 1,
+    pageSize: 5,
   }),
+
+  getters: {
+    paginatedUsers(state) {
+      const start = (state.currentPage - 1) * state.pageSize;
+      return state.products.slice(start, start + state.pageSize);
+    },
+
+    totalPages(state) {
+      return Math.ceil(state.products.length / state.pageSize);
+    },
+
+    showingData(): { currentMax: number; total: number } {
+      if (this.totalItems === 0) {
+        return { currentMax: 0, total: 0 };
+      }
+
+      // Công thức tính số tích lũy đến trang hiện tại
+      const potentialCount = this.currentPage * this.pageSize;
+      const currentMax = Math.min(potentialCount, this.totalItems);
+
+      return {
+        currentMax,
+        total: this.totalItems,
+      };
+    },
+  },
+
   actions: {
-    async fetchProductsByCategory() {
-      this.loading = true;
-      try {
-        const [resElec, resJew, resmenClo, reswomenClo] = await Promise.all([
-          getProducts("electronics"),
-          getProducts("jewelery"),
-          getProducts("men's clothing"),
-          getProducts("women's clothing"),
-        ]);
+    async loadProducts() {
+      const res = await getProducts();
 
-        // Gán dữ liệu vào đúng vị trí
-        this.electronics = resElec.data;
-        this.jewelery = resJew.data;
-        this.menClothing = resmenClo.data;
-        this.womenClothing = reswomenClo.data;
-      } catch (error) {
-        console.error("Lỗi tải dữ liệu:", error);
-      } finally {
-        this.loading = false;
-      }
+      this.products = res.data.map((u: any) => ({
+        id: u.id,
+        title: u.title,
+        price: u.price,
+        description: u.description,
+        category: u.category,
+        image: u.image,
+      }));
+
+      this.totalItems = this.products.length;
     },
 
-    // New product
     async createProduct(payload: any) {
-      try {
-        const res = await creatNewProducts(payload);
-        const newProduct = res.data;
+      await creatNewProducts(payload);
 
-        if (newProduct.category === "electronics") {
-          this.electronics.push(newProduct);
-        } else if (newProduct.category === "jewelery") {
-          this.jewelery.push(newProduct);
-        } else if (newProduct.category === "men's clothing") {
-          this.menClothing.push(newProduct);
-        } else {
-          this.womenClothing.push(newProduct);
-        }
+      const newId =
+        this.products.length > 0
+          ? Math.max(...this.products.map((u) => u.id)) + 1
+          : 1;
 
-        return newProduct;
-      } catch (error) {
-        console.error(error);
-      }
+      const newProduct: Product = {
+        id: newId,
+
+        title: payload.title,
+        price: payload.price,
+        description: payload.description,
+        category: payload.category,
+        image: payload.image,
+      };
+
+      this.products.push(newProduct);
+      this.totalItems = this.products.length;
+
+      return newProduct;
     },
 
-    // Update
+    /* ================= UPDATE ================= */
     async update_Product(id: number, payload: any) {
       const res = await updateProduct(id, payload);
-      const updatedProduct = res.data;
 
-      const categories = [
-        "electronics",
-        "jewelery",
-        "menClothing",
-        "womenClothing",
-      ] as const;
+      const index = this.products.findIndex((u) => u.id === id);
 
-      categories.forEach((product) => {
-        const targetArray = this[product] as Product[];
-        const index = targetArray.findIndex((p) => p.id === id);
-
-        if (index !== -1) {
-          targetArray[index] = {
-            ...targetArray[index],
-            ...updatedProduct,
-          };
-        }
-      });
+      if (index !== -1) {
+        this.products[index] = {
+          ...this.products[index],
+          ...payload,
+        };
+      }
 
       return res.data;
+    },
+
+    /* ================= DELETE ================= */
+    async deleteProduct(id: number) {
+      this.products = this.products.filter((u) => u.id !== id);
+      this.totalItems = this.products.length;
+
+      if (this.paginatedUsers.length === 0 && this.currentPage > 1) {
+        this.currentPage--;
+      }
     },
   },
 });

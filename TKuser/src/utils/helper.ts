@@ -1,7 +1,8 @@
 import { TOKEN_KEY, USER_KEY } from "./constants";
 import { useConfirm } from "primevue/useconfirm";
-import { deleteUserAPI } from "@/services/api";
+import { deleteUserAPI } from "@/services/apiUser";
 import { useToast } from "primevue/usetoast";
+import { deleteProductAPI } from "@/services/apiProduct";
 
 // === Quản lý token trong localStorage ===
 export const getAuthToken = () => localStorage.getItem(TOKEN_KEY);
@@ -73,26 +74,39 @@ export function deleteUser() {
   return delete_User;
 }
 
-//
-const responsiveOptions = [
-  {
-    breakpoint: "1300px",
-    numVisible: 5, // Màn hình lớn hiện 5
-    numScroll: 1,
-  },
-  {
-    breakpoint: "1024px",
-    numVisible: 3, // Màn hình vừa hiện 3
-    numScroll: 1,
-  },
-  {
-    breakpoint: "768px",
-    numVisible: 2, // Máy tính bảng hiện 2
-    numScroll: 1,
-  },
-  {
-    breakpoint: "560px",
-    numVisible: 1, // Điện thoại hiện 1
-    numScroll: 1,
-  },
-];
+// ======== Delete Product ========
+export function deleteProduct() {
+  const confirm = useConfirm();
+  const { showSuccess, showError } = useAppToast();
+  // ConfirmDialog
+  const delete_Product = (id: number, callback?: () => void) => {
+    confirm.require({
+      message: "Bạn chắc chắn muốn xoá sản phẩm?",
+      header: "Confirm Delete",
+      icon: "pi pi-info-circle",
+      rejectLabel: "Cancel",
+      rejectProps: {
+        label: "Cancel",
+        severity: "secondary",
+        outlined: true,
+      },
+      acceptProps: {
+        label: "Delete",
+        severity: "danger",
+      },
+
+      accept: async () => {
+        try {
+          await deleteProductAPI(id);
+
+          if (callback) callback();
+          // Toast
+          showSuccess("Xóa thành công!");
+        } catch (error) {
+          showError("Xóa thất bại");
+        }
+      },
+    });
+  };
+  return delete_Product;
+}

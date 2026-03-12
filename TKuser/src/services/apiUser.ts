@@ -33,24 +33,3 @@ export const updateUser = (id: number, data: any) => {
 export const deleteUserAPI = (id: number) => {
   return instance.delete(`/users/${id}`);
 };
-
-// ========== Products ==========
-// Get Products
-export const getProducts = (category: string) => {
-  return instance.get(`/products/category/${category}`);
-};
-
-// New Products
-export const creatNewProducts = (payload: any) => {
-  return instance.post("/products", payload);
-};
-
-// Update Products
-export const updateProduct = (id: number, data: any) => {
-  return instance.put(`/products/${id}`, data);
-};
-
-// GET product theo id
-export const getProductAPI = (id: number) => {
-  return instance.get(`/products/${id}`);
-};

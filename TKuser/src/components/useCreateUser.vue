@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // Component Create or Update - Hiển thị dialog tạo mới hoặc cập nhật người dùng
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import { deleteUser } from "@/utils/helper";
 import { useUserStore } from "@/stores/userStore";
 import { type User } from "../types/user";
@@ -42,7 +42,7 @@ watch(
   { immediate: true },
 );
 
-// Nút Tạo/Cập nhật user
+// Button Create/Update user
 const handleSubmit = async () => {
   if (!props.userEdit) {
     if (password.value !== confirmPassword.value) {
@@ -82,7 +82,17 @@ const handleSubmit = async () => {
   }
 };
 
-// Nút xóa
+// Tránh trống thông tin
+const isFormInvalid = computed(() => {
+  return (
+    !firstName.value.trim() ||
+    !email.value.trim() ||
+    !password.value.trim() ||
+    !role.value
+  );
+});
+
+// Button delete
 const handleDelete = () => {
   if (!props.userEdit) return;
 
@@ -197,7 +207,7 @@ const handleDelete = () => {
       <div class="space-y-3 pt-2">
         <button
           @click="handleSubmit"
-          :disabled="loading"
+          :disabled="loading || isFormInvalid"
           class="bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition w-full disabled:opacity-50"
         >
           {{

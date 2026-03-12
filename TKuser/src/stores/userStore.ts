@@ -1,6 +1,6 @@
 // Store người dùng - Quản lý tạo, sửa, xóa và hiện danh sách người dùng
 import { defineStore } from "pinia";
-import { getUsers, updateUser, createUserAPI } from "@/services/api";
+import { getUsers, updateUser, createUserAPI } from "@/services/apiUser";
 import { type User } from "../types/user";
 
 export const useUserStore = defineStore("user", {

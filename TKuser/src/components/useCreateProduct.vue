@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import { type Product } from "../types/product";
 import { useAppToast } from "@/utils/helper";
 import InputNumber from "primevue/inputnumber";
 import { useProductStore } from "@/stores/productStore";
+import { deleteProduct } from "@/utils/helper";
 
 const { showSuccess, showError } = useAppToast();
 const useProduct = useProductStore();
+const delete_Product = deleteProduct();
 
 const title = ref("");
 const price = ref<number | null>(null);
@@ -23,6 +25,7 @@ const props = defineProps<{
   productEdit?: Product | null;
 }>();
 
+// Chuyền dữ liệu khi update
 watch(
   () => props.productEdit,
   (product) => {
@@ -45,8 +48,11 @@ watch(
   { immediate: true },
 );
 
+// Button Create/Update
 const handleSubmit = async () => {
   try {
+    loading.value = true;
+
     const payload = {
       title: title.value,
       price: price.value,
@@ -72,6 +78,21 @@ const handleSubmit = async () => {
   } finally {
     loading.value = false;
   }
+};
+
+// Tránh trống thông tin
+const isFormInvalid = computed(() => {
+  return !title.value.trim() || price.value === null || !category.value;
+});
+
+// Delete
+const handleDelete = () => {
+  if (!props.productEdit) return;
+
+  delete_Product(props.productEdit.id, () => {
+    useProduct.deleteProduct(props.productEdit!.id);
+    emit("close");
+  });
 };
 </script>
 <template>
@@ -100,20 +121,19 @@ const handleSubmit = async () => {
 
       <!-- Price -->
       <div>
-        <label class="block text-xl font-medium text-black">Price (USD)</label>
+        <label class="block text-xl font-medium text-black">Price(USD)</label>
         <div
           class="input-standard flex items-center overflow-hidden p-0 focus-within:ring-2 focus-within:ring-blue-500"
         >
           <span
-            class="bg-gray-100 px-3 py-2 text-gray-700 border-r border-gray-900"
+            class="bg-gray-100 font-bold px-3 py-2 text-gray-700 border-r border-gray-900"
             >$</span
           >
           <InputNumber
             v-model="price"
-            inputId="locale-user"
             :minFractionDigits="2"
             fluid
-            inputClass="w-full px-3 py-2 border-none outline-none bg-transparent"
+            inputClass="p-inputnumber-input w-full px-3 py-2 border-none  bg-transparent"
           />
         </div>
       </div>
@@ -135,7 +155,7 @@ const handleSubmit = async () => {
         <label class="block font-medium text-xl text-black">Description </label>
         <textarea
           v-model="description"
-          rows="5"
+          rows="4 "
           cols="30"
           class="input-standard w-full"
           placeholder="Nhập mô tả sản phẩm..."
@@ -180,10 +200,18 @@ const handleSubmit = async () => {
       </button>
 
       <button
+        class="bg-red-400 text-white p-2 rounded hover:bg-red-500 transition"
+        @click="handleDelete"
+      >
+        Delete
+      </button>
+
+      <button
         @click="handleSubmit"
+        :disabled="loading || isFormInvalid"
         class="bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition disabled:opacity-50 p-2"
       >
-        Save Product
+        {{ loading ? "Save Product..." : "Save Product" }}
       </button>
     </div>
   </div>

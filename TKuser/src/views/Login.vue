@@ -29,7 +29,7 @@ const login = async () => {
       life: 4000,
     });
 
-    router.push("/users");
+    router.push("/product");
   } catch (error) {
     toast.add({
       severity: "error",

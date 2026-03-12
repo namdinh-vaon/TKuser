@@ -1,6 +1,6 @@
 // Store xác thực
 import { defineStore } from "pinia";
-import { loginUser } from "@/services/api";
+import { loginUser } from "@/services/apiUser";
 import { getAuthToken, removeAuthToken, setAuthToken } from "@/utils/helper";
 
 export const useLoginStore = defineStore("login", {

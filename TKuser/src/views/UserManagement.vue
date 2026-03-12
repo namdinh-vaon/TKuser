@@ -4,7 +4,7 @@ import { ref, onMounted } from "vue";
 import CreateUser from "../components/useCreateUser.vue";
 import { useUserStore } from "@/stores/userStore";
 import { type User } from "../types/user";
-import { getUserAPI } from "../services/api";
+import { getUserAPI } from "../services/apiUser";
 import { useLoginStore } from "@/stores/auth";
 import { useRouter } from "vue-router";
 import { deleteUser } from "@/utils/helper";
@@ -26,7 +26,7 @@ onMounted(() => {
   userStore.loadUsers();
 });
 
-// Edit
+// Mở giao diện Update
 const openEdit = async (user: User) => {
   const res = await getUserAPI(user.id);
   selectedUser.value = res.data;
@@ -39,6 +39,7 @@ const statusColor = (status: string) => {
   return "bg-yellow-500";
 };
 
+// Log out
 const handleLogout = () => {
   authStore.logout();
   router.push("/");
@@ -49,10 +50,17 @@ const handleLogout = () => {
   <div class="p-6 bg-gray-100 min-h-screen dark:text-gray-800 dark:bg-gray-800">
     <div class="bg-white rounded-xl shadow overflow-hidden dark:bg-gray-400">
       <!-- Header -->
-      <div class="bg-blue-500 text-white px-6 py-4 flex justify-between">
+      <div class="bg-blue-600 text-white px-6 py-4 flex justify-between">
         <h2 class="text-xl font-semibold">User Management</h2>
 
         <div class="flex gap-3">
+          <button
+            @click="router.push('/product')"
+            class="bg-white text-gray-700 px-4 py-2 rounded shadow transition hover:bg-gray-300 dark:text-gray-900 dark:bg-gray-400 dark:hover:bg-gray-300"
+          >
+            Product Management
+          </button>
+
           <button
             class="bg-white text-gray-700 px-4 py-2 rounded shadow transition hover:bg-gray-300 dark:text-gray-900 dark:bg-gray-400 dark:hover:bg-gray-300"
           >
@@ -67,7 +75,7 @@ const handleLogout = () => {
           </button>
 
           <button
-            class="bg-red-500 text-white px-4 py-2 rounded shadow transition hover:bg-red-700 flex items-center gap-2"
+            class="bg-red-400 text-white px-4 py-2 rounded shadow transition hover:bg-red-500 flex items-center gap-2"
             @click="handleLogout"
           >
             <span
@@ -126,17 +134,22 @@ const handleLogout = () => {
 
             <!-- Action -->
             <td class="text-center">
-              <button class="text-blue-500 mr-3" @click="openEdit(user)">
-                ⚙️
-              </button>
-              <button
-                class="text-red-500"
-                @click="
-                  delete_User(user.id, () => userStore.deleteUser(user.id))
-                "
-              >
-                ❌
-              </button>
+              <div class="flex justify-center items-center gap-3">
+                <button
+                  class="hover:scale-125 transition-transform"
+                  @click="openEdit(user)"
+                >
+                  ⚙️
+                </button>
+                <button
+                  class="hover:scale-125 transition-transform"
+                  @click="
+                    delete_User(user.id, () => userStore.deleteUser(user.id))
+                  "
+                >
+                  ❌
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -187,8 +200,6 @@ const handleLogout = () => {
           </button>
         </div>
       </div>
-
-      <!-- Footer -->
     </div>
   </div>
   <Dialog
