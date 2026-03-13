@@ -53,7 +53,7 @@ const handleLogout = () => {
       <div class="bg-blue-600 text-white px-6 py-4 flex justify-between">
         <h2 class="text-xl font-semibold">User Management</h2>
 
-        <div class="flex gap-3">
+        <div class="flex flex-wrap gap-3">
           <button
             @click="router.push('/product')"
             class="bg-white text-gray-700 px-4 py-2 rounded shadow transition hover:bg-gray-300 dark:text-gray-900 dark:bg-gray-400 dark:hover:bg-gray-300"
@@ -139,7 +139,7 @@ const handleLogout = () => {
                   class="hover:scale-125 transition-transform"
                   @click="openEdit(user)"
                 >
-                  ⚙️
+                  <i class="pi pi-cog text-gray-600"></i>
                 </button>
                 <button
                   class="hover:scale-125 transition-transform"
@@ -147,7 +147,7 @@ const handleLogout = () => {
                     delete_User(user.id, () => userStore.deleteUser(user.id))
                   "
                 >
-                  ❌
+                  <i class="pi pi-times text-red-500 font-bold"></i>
                 </button>
               </div>
             </td>

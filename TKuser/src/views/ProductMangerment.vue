@@ -45,7 +45,7 @@ const handleLogout = () => {
       <div
         class="bg-blue-600 text-white px-12 py-4 overflow-hidden flex items-center justify-between"
       >
-        <h2 class="text-xl font-semibold">STORE</h2>
+        <h2 class="text-xl p-4 font-semibold">Product Management</h2>
 
         <div class="flex items-center justify-between gap-4">
           <button
@@ -118,7 +118,7 @@ const handleLogout = () => {
                     class="hover:scale-125 transition-transform"
                     @click="openEdit(product)"
                   >
-                    ⚙️
+                    <i class="pi pi-cog text-gray-600"></i>
                   </button>
                   <button
                     class="hover:scale-125 transition-transform"
@@ -128,7 +128,7 @@ const handleLogout = () => {
                       )
                     "
                   >
-                    ❌
+                    <i class="pi pi-times text-red-500 font-bold"></i>
                   </button>
                 </div>
               </td>
