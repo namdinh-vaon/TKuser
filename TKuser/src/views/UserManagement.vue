@@ -56,7 +56,7 @@ const handleLogout = () => {
         <div class="flex flex-wrap gap-3">
           <button
             @click="router.push('/product')"
-            class="bg-white text-gray-700 px-4 py-2 rounded shadow transition hover:bg-gray-300 dark:text-gray-900 dark:bg-gray-400 dark:hover:bg-gray-300"
+            class="bg-white text-gray-700 px-4 py-2 rounded shadow transition hover:bg-gray-300 dark:text-gray-900 dark:bg-gray-400"
           >
             Product Management
           </button>
@@ -141,6 +141,7 @@ const handleLogout = () => {
                 >
                   <i class="pi pi-cog text-gray-600"></i>
                 </button>
+
                 <button
                   class="hover:scale-125 transition-transform"
                   @click="

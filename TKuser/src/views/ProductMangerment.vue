@@ -49,13 +49,13 @@ const handleLogout = () => {
 
         <div class="flex items-center justify-between gap-4">
           <button
-            class="cursor-pointer bg-white p-2 text-blue-900 hover:bg-gray-300 rounded"
+            class="cursor-pointer bg-white p-2 text-blue-900 hover:bg-gray-300 rounded dark:bg-gray-400"
             @click="router.push('/users')"
           >
             User Management
           </button>
           <button
-            class="cursor-pointer bg-white p-2 text-blue-900 hover:bg-gray-300 rounded"
+            class="cursor-pointer bg-white p-2 text-blue-900 hover:bg-gray-300 rounded dark:bg-gray-400"
             @click="openCreate"
           >
             + Add New product
@@ -72,11 +72,10 @@ const handleLogout = () => {
         </div>
       </div>
 
-      <div class="bg-white rounded-lg shadow overflow-hidden">
+      <!-- Table -->
+      <div class="bg-white rounded-lg shadow overflow-hidden dark:bg-gray-400">
         <table class="w-full text-left border-collapse">
-          <thead
-            class="bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-white"
-          >
+          <thead class="bg-gray-100 text-gray-700 dark:bg-gray-500">
             <tr>
               <th class="p-4">#</th>
               <th class="p-4">Image</th>
@@ -91,7 +90,7 @@ const handleLogout = () => {
             <tr
               v-for="product in productStore.paginatedUsers"
               :key="product.id"
-              class="border-t hover:bg-gray-50 dark:hover:bg-gray-600 dark:text-white transition-colors"
+              class="border-t hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
             >
               <td class="p-4">{{ product.id }}</td>
 
@@ -102,16 +101,20 @@ const handleLogout = () => {
                 />
               </td>
 
+              <!-- Title -->
               <td class="p-4">
                 <span class="font-medium">{{ product.title }}</span>
               </td>
 
+              <!-- Price -->
               <td class="p-4 font-bold text-blue-600">${{ product.price }}</td>
 
+              <!-- Category -->
               <td class="p-4 text-sm text-gray-500 capitalize">
                 {{ product.category }}
               </td>
 
+              <!-- Action -->
               <td class="p-4 text-center">
                 <div class="flex justify-center gap-3">
                   <button
