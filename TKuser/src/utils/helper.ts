@@ -1,17 +1,16 @@
-import { TOKEN_KEY, USER_KEY } from "./constants";
 import { useConfirm } from "primevue/useconfirm";
 import { deleteUserAPI } from "@/services/apiUser";
 import { useToast } from "primevue/usetoast";
 import { deleteProductAPI } from "@/services/apiProduct";
 
 // === Quản lý token trong localStorage ===
-export const getAuthToken = () => localStorage.getItem(TOKEN_KEY);
+export const getAuthToken = () => localStorage.getItem("token");
 export const setAuthToken = (token: any) =>
-  localStorage.setItem(TOKEN_KEY, token);
-export const removeAuthToken = () => localStorage.removeItem(TOKEN_KEY);
+  localStorage.setItem("token", token);
+export const removeAuthToken = () => localStorage.removeItem("token");
 
 // === Quản lý thông tin user trong localStorage ===
-export const removeUser = () => localStorage.removeItem(USER_KEY);
+export const removeUser = () => localStorage.removeItem("user");
 
 // ============== Toast ==============
 export const useAppToast = () => {

@@ -10,6 +10,7 @@ import Dialog from "primevue/dialog";
 import ConfirmationService from "primevue/confirmationservice";
 import "primeicons/primeicons.css";
 import ToastService from "primevue/toastservice";
+import Checkbox from "primevue/checkbox";
 
 const app = createApp(App);
 const pinia = createPinia();
@@ -27,6 +28,7 @@ app.use(PrimeVue, {
 });
 
 app.component("Dialog", Dialog);
+app.component("Checkbox", Checkbox);
 app.use(ConfirmationService);
 app.use(router);
 

@@ -4,39 +4,29 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import CreateUser from "../components/useCreateUser.vue";
 import { useLoginStore } from "@/stores/auth";
-import { useToast } from "primevue/usetoast";
+import { useAppToast } from "@/utils/helper";
 
-const router = useRouter();
-const toast = useToast();
+const { showSuccess, showError } = useAppToast();
+const router = useRouter()
 const loginStore = useLoginStore();
 
 const email = ref("");
 const password = ref("");
-const remember = ref(false);
 const showPassword = ref(false);
 const loading = ref(false);
 const showDialog = ref(false);
+const checked = ref(false);
 
 const login = async () => {
   try {
     loading.value = true;
     await loginStore.login(email.value, password.value);
 
-    toast.add({
-      severity: "success",
-      summary: "Thành công",
-      detail: "Đăng nhập hệ thống hoàn tất!",
-      life: 4000,
-    });
+    showSuccess("Đăng nhập thành công!")
 
     router.push("/product");
   } catch (error) {
-    toast.add({
-      severity: "error",
-      summary: "Lỗi đăng nhập",
-      detail: "Email hoặc mật khẩu không chính xác",
-      life: 5000,
-    });
+    showError("Email hoặc mật khẩu không chính xác")
   } finally {
     loading.value = false;
   }
@@ -97,11 +87,7 @@ const login = async () => {
         <!-- Remember -->
         <div class="flex justify-between text-sm">
           <label class="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              v-model="remember"
-              class="w-4 h-4 accent-blue-500"
-            />
+            <Checkbox v-model="checked" binary />
             Remember me
           </label>
 
